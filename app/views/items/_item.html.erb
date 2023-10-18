@@ -1,0 +1,34 @@
+<table style="background-color:black;width:100%;height: 20px;">
+  <colgroup>
+    <col style="background-color:rgb(245, 242, 242);width:50%">
+    <col style="background-color:rgb(221, 221, 221);width:50%">
+  </colgroup>
+  <tr>
+    <td style="vertical-align:top;">      
+      <div id="<%= dom_id item %>">
+        <% if item.translation? %>
+          <p>
+            Translation of <%= link_to "Item #{item.item_id}", item_path(item.item_id) %> into <strong><%= "#{item.language}" %></strong>
+          </p>
+        <% end %>
+        <p>
+          <strong>Status:</strong>
+          <%= item.status %>
+        </p>
+        <p>
+          <strong>Title:</strong>
+          <%= item.title %>
+        </p>
+        <p>
+          <strong>Description:</strong>
+          <%= item.description %>
+        </p>
+      </div>
+    </td>  
+    <td>
+      <p>
+        <%= simple_format(item.content) %>
+      </p>
+    </td>  
+  </tr>  
+</table>
