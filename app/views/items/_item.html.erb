@@ -8,7 +8,7 @@
       <div id="<%= dom_id item %>">
         <% if item.translation? %>
           <p>
-            Translation of <%= link_to "Item #{item.item_id}", item_path(item.item_id) %> into <strong><%= "#{item.language}" %></strong>
+            Translation of <%= link_to "Item #{item.item_id}", item_path(item.item_id) %> into <strong><%= "#{item.language.name}" %></strong>
           </p>
         <% end %>
         <p>
@@ -24,8 +24,20 @@
           <%= item.description %>
         </p>
       </div>
+      <% if item.events.present? %>
+        <h4>
+          Registered works on this item:
+        </h4>
+        <div>
+          <% item.events.order(id: :desc).each do |e| %>
+            <p>
+              <%= phrase_that(e) %> <strong><%= time_tag e.created_at, "data-local": "time-ago" %></strong>
+            </p>
+          <% end %>
+      </div>
+      <% end %>
     </td>  
-    <td>
+    <td style="vertical-align:top;">
       <p>
         <%= simple_format(item.content) %>
       </p>

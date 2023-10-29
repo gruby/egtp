@@ -1,4 +1,5 @@
 class PasswordResetsController < ApplicationController
+  skip_before_action :authorize
   before_action :set_user_by_token, only: [:edit, :update]
 
   def new
@@ -11,7 +12,7 @@ class PasswordResetsController < ApplicationController
         token: user.generate_token_for(:password_reset)
       ).password_reset.deliver_later
     end
-    redirect_to root_path, notice: "Check your emial to reset your password"
+    redirect_to root_path, notice: "Check your email to reset your password"
   end  
 
   def edit

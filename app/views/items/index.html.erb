@@ -1,41 +1,14 @@
-<p style="color: green"><%= notice %></p>
+<h6>
+  <%= link_to "HOME", root_path %>
+  <%= link_to "ADMIN", admin_path %>
+</h6>
 
 <h1>Items</h1>
 
 <div id="items">
   <% @items.each do |item| %>
-    <div class="card">
-      <p>
-        <strong>TITLE:</strong>
-        <%= item.title %>
-      </p>
-      <p>
-        <strong>ID:</strong>
-        <%= item.id %>
-      </p>
-      <p>
-        <strong>Language:</strong>
-        <%= item.language %>
-      </p>
-      <% if item.translation? %>
-        <p>
-          <strong>Original:</strong>
-          <%= item.item_id %>
-        </p>
-      <% end %>
-      <p>
-        <strong>Status:</strong>
-        <%= item.status %>
-      </p>
-      <%#= render item %>
-      <p>
-        <%= link_to "Show this item", item %>
-      </p>
-    </div>
+    <%= link_to "#{item.id}_#{item.language.name}_#{item.status}", item_path(item) %>
   <% end %>
 </div>
 
 <hr>
-
-<%== pagy_nav(@pagy) %>
-<%= link_to "New item", new_item_path %>

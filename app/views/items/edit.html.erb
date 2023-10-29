@@ -1,12 +1,89 @@
-<% if @item.translation? %>
-  <h4>Translaion of <%= link_to "Item #{@item.item_id}", item_path(@item.item_id) %> into <%= "#{@item.language}" %></h4>
+<%= form_with(model: @item) do |form| %>
+  <% if @item.errors.any? %>
+    <div>
+      <h2><%= pluralize(@item.errors.count, "error") %> prohibited this @item from being saved:</h2>
+      <ul>
+        <% @item.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+  <table style="background-color:black;width:100%;">
+    <colgroup>
+      <col style="background-color:rgb(245, 242, 242);width:50%;">
+      <col style="background-color:rgb(221, 221, 221);width:50%;">
+    </colgroup>
+    <tr>
+      <td style="vertical-align:top;">
+        <% if @item.translation? %>
+          <h4>Translaion of <%= link_to "item #{@item.item_id}", item_path(@item.item), :target => "_blank" %> into <%="#{@item.language.name}"%></h4>
+        <% end %>  
+        <div>
+          <%= form.label :title, style: "display: block" %>
+          <%= form.text_field :title %>
+        </div>
+        <div>
+          <%= form.label :description, style: "display: block" %>
+          <%= form.text_area :description %>
+        </div>
+        <% if params[:action] == "new"%>
+          <div>
+            <%= form.hidden_field :status, :value => "ONGOING TT"%>
+            <%= form.hidden_field :language_id, :value => 1 %>
+            <%= form.hidden_field :user_id, :value => current_user.id %>
+          </div>
+        <% end %>
+        <% if current_user.admin? %>
+          <h5>
+            Admin section:
+          </h5>
+          <% if params[:action] != "new"%>
+            <div>
+              <%= form.label :status, style: "display: block" %>
+              <%#= select("item", "status", ["READY FOR TT", "READY FOR RV", "REVISED"]) %>
+              <%= select("item", "status", @item.status_options ) %>
+            </div>
+          <% end %>
+          <div>
+            <%= form.label :media, style: "display: block" %>
+            <%= form.text_field :media %>
+          </div>
+        <% end %>
+      </td>
+      <td style="vertical-align:top;">   
+        <div style="width:100%;display: block;min-height: 200px;">
+            <%= form.label :content, style: "display: block;height: min-content;" %>
+            <%= form.text_area :content, style: "width:99%;min-height: 300px;" %>
+          </div>  
+      </td>
+    </tr>
+    <div>
+      <%= form.submit "Resign" %>
+      <%= form.submit "Save" %>
+      <% if params[:action] != "new"%>
+        <%= form.submit "Submit" %>
+      <% end %>
+      <% if current_user.admin? %>
+        <%= form.submit "Admin's update", style: "background-color:red;" %>
+      <% end %>
+    </div>
+  </table>
 <% end %>
-
-<%= render "form", item: @item %>
-
-<hr>
-
-<div>
-  <%= link_to "Show this item", @item %> |
-  <%= link_to "Back to items", items_path %>
-</div>
+<%= form_with model: Comment.new do |c| %>
+  <%= c.hidden_field :user_id, :value => current_user.id %>
+  <%= c.hidden_field :item_id, :value => @item.id %>
+  <%= c.label :content, style: "display: block" %>
+  <%= c.text_area :content %><br>
+  <%= c.submit "Add comment" %>
+<% end %>
+<br>
+<% @item.comments.order(id: :desc).each do |co| %>
+  <div style="background-color: rgb(241, 241, 241);">
+    <p>
+      <%= time_tag co.created_at, "data-local": "time-ago" %>
+      <strong><%= co.user.email%></strong> wrote:<br>
+      <%= co.content %>
+    </p>
+  </div>
+<% end %>

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Final</title>
+    <title>Egtp</title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
@@ -11,23 +11,9 @@
   </head>
 
   <body>
-    <div><%= notice %></div>
-    <div><%= alert %></div>
-    <% if current_user %>
-      <h3>Hello <%= current_user.email %> </h3>
-      <%= button_to "Log out", session_path, method: :delete %>
-      <%= link_to_unless_current :HOME, root_path %>  
-      <%= link_to_unless_current :users, users_path %>
-      <%= link_to_unless_current :events, events_path %>
-      <%= link_to_unless_current :comments, comments_path %>
-      <%= link_to_unless_current :rights, rights_path %>
-      <%= link_to_unless_current :items, items_path %>
-      <%= link_to_unless_current :languages, languages_path %>
-      <%= link_to_unless_current "update your password", edit_password_path %>
-      <%= link_to_unless_current "Import User", import_user_path %> 
-    <% else %>
-      <%= link_to_unless_current "Log in", new_session_path %>
-    <% end %>
+  <%= notice %>
+    <!--<div><%= notice %></div>
+    <div><%= alert %></div>-->
     <%= yield %>
   </body>
 </html>

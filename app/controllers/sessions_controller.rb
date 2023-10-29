@@ -1,12 +1,12 @@
 class SessionsController < ApplicationController
-  #skip_before_action :authorize
+  skip_before_action :authorize
 
   def new
   end 
 
   def create 
     user = User.find_by_email(params[:email])
-    if user && user.authenticate(params[:password])
+    if user && user.authenticate(params[:password].strip)
       # session[:user_id] = user.id 
       login user
       redirect_to root_path, :notice => "logged in"

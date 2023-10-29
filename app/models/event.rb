@@ -4,7 +4,7 @@ class Event < ApplicationRecord
 
   def author
     if user
-      user.name
+      user.named
     else
       "unknown"
     end

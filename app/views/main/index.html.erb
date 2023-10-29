@@ -1,44 +1,38 @@
-<h1>Global Translaion Project</h1>
 <% if current_user %>
-  <h6>
-    <%= current_user.name %> in <%= current_user.language %>, role: <%= current_user.role %>
-  </h6>
-
-  <% if @ongoing_tasks.empty? %>
-    <p>
-      Currently you don't have any ongoing tasks.
-    </p>
-  <% else %>
-    <p>
-      Your ongoing tasks:
-    </p>
-    <% @ongoing_tasks.each do |o| %>
-      <div class="card">
-        <%= link_to o.id, edit_item_path(o) %>
-        <%= form_for o do |f| %>
-          <%= f.hidden_field :status, :value => "READY FOR #{o.status[-2..-1]}" %>
-          <%= f.hidden_field :user_id, :value => nil %>
-          <%= f.hidden_field :context_info, :value => "resigned from #{o.name_task}" %>
-          <%= f.submit "Resign" %>
-        <% end %>
-      </div>
+  <%= button_to "#{current_user.named} (#{current_user.role} in #{current_user.language.name}) - settings", settings_path, :method => "get" %>
+  <% if current_user.admin? %>
+    <%= link_to "Admin section", admin_path %>
+    <%= form_for current_user do |f| %>
+      <%= select("user", "language_id", Language.all.collect{ |l| [l.name, l.id] }, :selected => current_user.language_id ) %>
+      <%= f.submit "change" %>
+    <% end %>
+  <% elsif current_user.languages.size > 1 %>
+    <%= form_for current_user do |f| %>
+      <%= select("user", "language_id", current_user.languages.collect{ |l| [l.name, l.id] }, :selected => current_user.language_id ) %>
+      <%= f.submit "change" %>
     <% end %>
   <% end %>
-  <hr>
+
+  <% unless @ongoing_tasks.empty? %>
+    <% @ongoing_tasks.each do |o| %>
+      <div class="card" style="background-color: yellow">
+        <%= link_to o.id, edit_item_path(o) %>
+      </div>
+    <% end %>
+    <hr>
+  <% end %>
 
   <% if current_user.role == "LC" %>
-    <% if @for_revision.empty? %>
-      <p> 
-        Currently there are no items for revision.
-      </p>
-    <% else %>
+    <% unless @for_revision.empty? %>
       <p>
         For revision:
       </p>
       <% @for_revision.each do |r| %>
-        <div class="card">
+        <div class="card" style="background-color: green">
           <%= link_to r.id, item_path(r) %>
           <%= form_for r do |rv| %>
+            <%= rv.hidden_field :user_id, :value => current_user.id %>
+            <%= rv.hidden_field :status, :value => 4 %>
             <%= rv.submit "Start RV" %>
           <% end %>
         </div>
@@ -48,37 +42,41 @@
   <% end %>
 
   <% if @for_tt.empty? %>
-    <p> Currently there are no items for <%= current_user.language == "English" ? "transcription" : "translation" %> </p>
+    <p> Currently there are no items for <%= current_user.language.name == "English" ? "transcription" : "translation" %> </p>
   <% else %> 
     <p>
-      <%= current_user.language == "English" ? "For transcription:" : "For translation:" %>
+      <%= current_user.language.name == "English" ? "For transcription:" : "For translation:" %>
     </p>
     <% @for_tt.each do |i| %>
       <div class="card">
         <%= link_to i.id, item_path(i) %>
 
-      <% if current_user.language == "English" %>
+      <% if current_user.language_id == 1 %>
         <%= form_for i do |e| %>
+          <%= e.hidden_field :user_id, :value => current_user.id %>
+          <%= e.hidden_field :status, :value => 2 %>
           <%= e.submit "Start TT" %>
         <% end %>
         <% i.events.order(id: :desc).each do |ev| %>
           <p><%= ev.context_info %></p>
         <% end %>
       <% else %>
-        <% if i.translation_in(current_user.language) %>
-          <p> there is existing <%= link_to "translation", item_path(i.translation_in(current_user.language)) %> </p>
-          <%= form_for i.translation_in(current_user.language) do |f| %>
-            <%= f.submit "Start TT" %>            
+        <% if i.translation_in(current_user.language_id) %>
+          <p> there is existing <%= link_to "translation", item_path(i.translation_in(current_user.language_id)) %> </p>
+          <%= form_for i.translation_in(current_user.language_id) do |f| %>
+            <%= f.hidden_field :user_id, :value => current_user.id %>
+            <%= f.hidden_field :status, :value => 2 %>
+            <%= f.submit "Start TT" %>                    
           <% end %>
-          <% i.translation_in(current_user.language).events.order(id: :desc).each do |ev| %>
+          <% i.translation_in(current_user.language_id).events.order(id: :desc).each do |ev| %>
             <p><%= ev.context_info %></p>
           <% end %>
         <% else %>
           <p> No existing translation </p>
           <%= form_with model: Item.new do |f| %>
-            <%= f.hidden_field :language, :value => current_user.language %>
+            <%= f.hidden_field :language_id, :value => current_user.language.id %>
             <%= f.hidden_field :item_id, :value => i.id %>
-            <%= f.hidden_field :status, :value => "ONGOING TT" %>
+            <%= f.hidden_field :status, :value => 2 %>
             <%= f.hidden_field :user_id, :value => current_user.id %>
             <%= f.submit "Start TT" %>
           <% end %>
@@ -86,8 +84,11 @@
       <% end %>
       </div>
     <% end %>
-  <% end %>  
+  <% end %>
+  <hr>
+  <% if @pagy.pages > 1 %>
+    <%== pagy_nav(@pagy) %>
+  <% end %>
 <% end %>
-<hr>
-<%== pagy_nav(@pagy) %>
+
 

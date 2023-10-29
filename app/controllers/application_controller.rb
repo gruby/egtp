@@ -1,6 +1,6 @@
 class ApplicationController < ActionController::Base
   include Pagy::Backend
-  #before_action :authorize
+  before_action :authorize
   
   def authorize
     redirect_to login_url if current_user.nil?
@@ -13,8 +13,8 @@ class ApplicationController < ActionController::Base
   
   private
   def current_user
-    #@current_user ||= authenticate_user_from_session
-    @current_user ||= User.find(1)
+    @current_user ||= authenticate_user_from_session
+    #@current_user ||= User.find(1)
   end
   helper_method :current_user
 
@@ -34,4 +34,9 @@ class ApplicationController < ActionController::Base
     @current_user = nil
     reset_session
   end  
+
+  def admin_only
+    redirect_to root_url unless current_user.admin?
+    return
+  end
 end

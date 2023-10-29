@@ -12,18 +12,18 @@
   <% end %>
 
   <div>
-    <%= form.label :role, style: "display: block" %>
-    <%= form.text_field :role %>
+    <%= form.label :user_id, style: "display: block" %>
+    <%= select("right", "user_id", User.all.collect {|p| [ p.named, p.id ] }, { include_blank: true }) %>
   </div>
 
   <div>
-    <%= form.label :user_id, style: "display: block" %>
-    <%= form.number_field :user_id %>
+    <%= form.label :role, style: "display: block" %>
+    <%= select("right", "role", options_for_select([ "TT" ,"LC" ])) %>
   </div>
 
   <div>
     <%= form.label :language_id, style: "display: block" %>
-    <%= form.number_field :language_id %>
+    <%= select("right", "language_id", Language.all.collect {|p| [ p.name, p.id ] }, { include_blank: true }) %>
   </div>
 
   <div>

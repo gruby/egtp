@@ -1,27 +1,59 @@
-<h1>Update password</h1>
+<%= button_to "Log out", session_path, method: :delete %> 
 
-<%= form_with model: current_user, url: password_path do |form| %>
-  <% if form.object.errors.any? %>
-    <% form.object.errors.full_messages.each do |m| %>
-      <div><%= m %></div>
+<div style="border-style: solid;">
+  <b>Update password</b>
+  <%= form_with model: current_user, url: password_path do |form| %>
+    <% if form.object.errors.any? %>
+      <% form.object.errors.full_messages.each do |m| %>
+        <div><%= m %></div>
+      <% end %>
+    <% end %>
+    <div>
+      <%= form.label :password_challenge, "Current Password" %>
+      <%= form.password_field :password_challenge %>
+    </div>
+
+    <div>
+      <%= form.label :password, "New Password" %>
+      <%= form.password_field :password %>
+    </div>
+
+    <div>
+      <%= form.label :password_confirmation %>
+      <%= form.password_field :password_confirmation %>
+    </div>
+
+    <div>
+      <%= form.submit "Update Password" %>
+    </div>
+  <% end %>
+</div>
+<div style="border-style: solid;">
+  <%= form_with model: current_user do |form| %>
+    <% if current_user.notifications? %>  
+      <div>
+        <%= form.hidden_field :notifications, :value => false %>
+      </div>
+      <div>
+        <%= form.submit "I do not wish to recieve notifications from the application", data: { confirm: 'Your confirm message' } %>
+      </div>
+    <% else %>
+      <div>
+        <%= form.hidden_field :notifications, :value => true %>
+      </div>
+      <div>
+        <%= form.submit "I wish to recieve notifications from the application" %>
+      </div>
     <% end %>
   <% end %>
-  <div>
-    <%= form.label :password_challenge, "Current Password" %>
-    <%= form.password_field :password_challenge %>
-  </div>
-
-  <div>
-    <%= form.label :password, "New Password" %>
-    <%= form.password_field :password %>
-  </div>
-
-  <div>
-    <%= form.label :password_confirmation %>
-    <%= form.password_field :password_confirmation %>
-  </div>
-
-  <div>
-    <%= form.submit "Update Password" %>
-  </div>
-<% end %>
+</div>
+<div style="border-style: solid;">
+  <%= form_with model: current_user do |form| %>
+    <div>
+      <%= form.hidden_field :active, :value => false %>
+    </div>
+    <div>
+      <%= form.submit "Please remove me from this project", data: { "turbo-confirm": 'After this confirmation, your account will be deactivated. Are you sure?' } %>
+    </div>
+  <% end %>
+</div>

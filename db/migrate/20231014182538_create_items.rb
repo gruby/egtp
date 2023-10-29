@@ -1,9 +1,9 @@
 class CreateItems < ActiveRecord::Migration[7.1]
   def change
     create_table :items do |t|
-      t.string :language
+      t.integer :language_id
       t.string :media
-      t.string :status
+      t.integer :status
       t.string :title
       t.string :description
       t.text :content

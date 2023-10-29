@@ -1,4 +1,10 @@
-<h1>users</h1>
+<h6>
+  <%= link_to "HOME", root_path %>
+  <%= link_to "ADMIN", admin_path %>
+</h6>
+
+<%= link_to "Add user", controller: "users", action: "new" %>
+<hr>
 <% @users.each do |u| %>
-  <%= "#{u.email}, #{u.language} " %><br>
+  <%= "#{u.email}, #{u.language.name} " %><br>
 <% end %>

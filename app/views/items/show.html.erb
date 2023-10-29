@@ -1,12 +1,60 @@
-<p style="color: green"><%= notice %></p>
-
-<%= render @item %>
+<!-- <p style="color: green"><%= notice %></p> -->
+<table style="background-color:black;width:100%;height: 20px;">
+  <colgroup>
+    <col style="background-color:rgb(245, 242, 242);width:50%">
+    <col style="background-color:rgb(221, 221, 221);width:50%">
+  </colgroup>
+  <tr>
+    <td style="vertical-align:top;">      
+      <div id="<%= dom_id @item %>">
+        <% if @item.translation? %>
+          <p>
+            Translation of <%= link_to "Item #{@item.item_id}", item_path(@item.item_id), :target => "_blank" %> into <strong><%= "#{@item.language.name}" %></strong>
+          </p>
+        <% else %>
+          <p>
+            ORIGINAL
+          </p>
+        <% end %>
+        <p>
+          <strong>Status:</strong>
+          <%= @item.status_options.key(@item.status) %>
+        </p>
+        <p>
+          <strong>Title:</strong>
+          <%= @item.title %>
+        </p>
+        <p>
+          <strong>Description:</strong>
+          <%= @item.description %>
+        </p>
+      </div>
+      <% if @item.events.present? %>
+        <h4>
+          Registered works on this item:
+        </h4>
+        <div>
+          <% @item.events.order(id: :desc).each do |e| %>
+            <p>
+              <%= phrase_for_item(e) %> <strong><%= time_tag e.created_at, "data-local": "time-ago" %></strong>
+            </p>
+          <% end %>
+      </div>
+      <% end %>
+    </td>  
+    <td style="vertical-align:top;">
+      <p>
+        <%= simple_format(@item.content) %>
+      </p>
+    </td>  
+  </tr>  
+</table>
 <hr>
 
 <%= form_with model: Comment.new do |c| %>
   <%= c.hidden_field :user_id, :value => current_user.id %>
   <%= c.hidden_field :item_id, :value => @item.id %>
-  <%= c.label :content, style: "display: block" %>
+  <%= c.label "Your comment:", style: "display: block" %>
   <%= c.text_area :content %><br>
   <%= c.submit "Add comment" %>
 <% end %>
@@ -15,17 +63,13 @@
   <div style="background-color: rgb(241, 241, 241);">
     <p>
       <%= time_tag co.created_at, "data-local": "time-ago" %>
-      <strong><%= co.user.name%></strong> wrote:<br>
+      <strong><%= co.user.email%></strong> wrote:<br>
       <%= co.content %>
     </p>
   </div>
 <% end %>
 
 <hr>
-
-<div>
-  <%= link_to "Edit this item", edit_item_path(@item) %> |
-  <%= link_to "Back to items", items_path %>
-  
-  <%= button_to "Destroy this item", @item, method: :delete %>
-</div>
+<% if current_user.admin? %>
+  <%= link_to "Edit this item", edit_item_path(@item) %>
+<% end %>

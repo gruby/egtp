@@ -1,8 +1,13 @@
+<% if params[:action] != "new" %>
+  <%= form_with(model: item) do |form| %>
+    <%= form.submit "Resign" %>
+  <% end %>
+<% end %>
+
 <%= form_with(model: item) do |form| %>
   <% if item.errors.any? %>
     <div style="color: red">
       <h2><%= pluralize(item.errors.count, "error") %> prohibited this item from being saved:</h2>
-
       <ul>
         <% item.errors.each do |error| %>
           <li><%= error.full_message %></li>
@@ -10,58 +15,56 @@
       </ul>
     </div>
   <% end %>
-
-  <div>
-    <%= form.label :language, style: "display: block" %>
-    <%= form.text_field :language %>
-  </div>
-
-  <div>
-    <%= form.label :media, style: "display: block" %>
-    <%= form.text_field :media %>
-  </div>
-
-  <div>
-    <%= form.label :status, style: "display: block" %>
-    <%= form.text_field :status %>
-  </div>
-
-  <div>
-    <%= form.label :title, style: "display: block" %>
-    <%= form.text_field :title %>
-  </div>
-
-  <div>
-    <%= form.label :description, style: "display: block" %>
-    <%= form.text_field :description %>
-  </div>
-
-  <div>
-    <%= form.label :content, style: "display: block" %>
-    <%= form.text_area :content %>
-  </div>
-
-  <div>
-    <%= form.label :user_id, style: "display: block" %>
-    <%= form.number_field :user_id %>
-  </div>
-
-  <div>
-    <%= form.label :item_id, style: "display: block" %>
-    <%= form.number_field :item_id %>
-  </div>
-
-  <div>
-    <%= form.label :context_info, style: "display: block" %>
-    <%= form.text_field :context_info %>
-  </div>
-
-  <div>
-    <%= form.label :published, style: "display: block" %>
-    <%= form.check_box :published %>
-  </div>
-
-  <div>
-    <%= form.submit %>
-  </div>
+  <table style="background-color:black;width:100%;">
+    <colgroup>
+      <col style="background-color:rgb(245, 242, 242);width:50%;">
+      <col style="background-color:rgb(221, 221, 221);width:50%;">
+    </colgroup>
+    <tr>
+      <td style="vertical-align:top;">   
+        <div>
+          <%= form.label :title, style: "display: block" %>
+          <%= form.text_field :title %>
+        </div>
+        <div>
+          <%= form.label :description, style: "display: block" %>
+          <%= form.text_area :description %>
+        </div>
+        <% if params[:action] == "new"%>
+          <div>
+            <%= form.hidden_field :status, :value => "ONGOING TT"%>
+            <%= form.hidden_field :language_id, :value => 1 %>
+            <%= form.hidden_field :user_id, :value => current_user.id %>
+          </div>
+        <% end %>
+        <% if current_user.admin? %>
+          <h5>
+            Admin section:
+          </h5>
+          <% if params[:action] != "new"%>
+            <div>
+              <%= form.label :status, style: "display: block" %>
+              <%= select("right", "user_id", User.all.collect {|p| [ p.named, p.id ] }, { include_blank: true }) %>
+            </div>
+          <% end %>
+          <div>
+            <%= form.label :media, style: "display: block" %>
+            <%= form.text_field :media %>
+          </div>
+        <% end %>
+      </td>
+      <td style="vertical-align:top;">   
+        <div style="width:100%;display: block;min-height: 200px;">
+            <%= form.label :content, style: "display: block;height: min-content;" %>
+            <%= form.text_area :content, style: "width:99%;min-height: 300px;" %>
+          </div>  
+      </td>
+    </tr>
+    <div>
+      <%= form.submit "Save" %>
+      <% if params[:action] != "new"%>
+        <%= form.submit "Submit" %>
+      <% end %>
+    </div>
+  </table>
 <% end %>

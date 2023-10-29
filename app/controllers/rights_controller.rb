@@ -1,9 +1,9 @@
 class RightsController < ApplicationController
   before_action :set_right, only: %i[ show edit update destroy ]
-
+  before_action :admin_only
   # GET /rights or /rights.json
   def index
-    @rights = Right.all
+    @rights = Right.all.order(:language_id, :role)
   end
 
   # GET /rights/1 or /rights/1.json
@@ -25,7 +25,7 @@ class RightsController < ApplicationController
 
     respond_to do |format|
       if @right.save
-        format.html { redirect_to right_url(@right), notice: "Right was successfully created." }
+        format.html { redirect_to rights_path, notice: "Right was successfully created." }
         format.json { render :show, status: :created, location: @right }
       else
         format.html { render :new, status: :unprocessable_entity }
@@ -38,7 +38,7 @@ class RightsController < ApplicationController
   def update
     respond_to do |format|
       if @right.update(right_params)
-        format.html { redirect_to right_url(@right), notice: "Right was successfully updated." }
+        format.html { redirect_to rights_path, notice: "Right was successfully updated." }
         format.json { render :show, status: :ok, location: @right }
       else
         format.html { render :edit, status: :unprocessable_entity }

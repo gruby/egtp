@@ -1,9 +1,10 @@
 class EventsController < ApplicationController
   before_action :set_event, only: %i[ show edit update destroy ]
+  before_action :admin_only
 
   # GET /events or /events.json
   def index
-    @events = Event.all
+    @events = Event.all.order(id: :desc)
   end
 
   # GET /events/1 or /events/1.json

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2023_10_15_134536) do
+ActiveRecord::Schema[7.1].define(version: 2023_10_14_182646) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -31,9 +31,9 @@ ActiveRecord::Schema[7.1].define(version: 2023_10_15_134536) do
   end
 
   create_table "items", force: :cascade do |t|
-    t.string "language"
+    t.integer "language_id"
     t.string "media"
-    t.string "status"
+    t.integer "status"
     t.string "title"
     t.string "description"
     t.text "content"
@@ -62,17 +62,17 @@ ActiveRecord::Schema[7.1].define(version: 2023_10_15_134536) do
   create_table "users", force: :cascade do |t|
     t.string "email"
     t.string "password_digest"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.string "language"
-    t.boolean "admin", default: false
+    t.boolean "admin"
+    t.boolean "active", default: true
+    t.boolean "notifications", default: true
     t.string "name"
     t.string "nick"
+    t.integer "language_id"
     t.string "phone"
     t.string "address"
     t.string "country"
-    t.boolean "notifications", default: true
-    t.boolean "active", default: true
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
 end

@@ -1,4 +1,9 @@
 class AdminController < ApplicationController
+  before_action :admin_only
+  def index
+    
+  end
+
   def import_user
     if params[:query].present?
       require 'csv'

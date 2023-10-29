@@ -1,11 +1,12 @@
-<p style="color: green"><%= notice %></p>
-
-<h1>Languages</h1>
-
-<div id="languages">
-  <% @languages.each do |language| %>
-    <%= render language %>
-  <% end %>
-</div>
-
+<h6>
+  <%= link_to "HOME", root_path %>
+  <%= link_to "ADMIN", admin_path %>
+</h6>
 <%= link_to "New language", new_language_path %>
+<h1>Languages</h1>
+<% @languages.each do |l| %>
+  <%= "#{l.id} - #{l.name}" %>
+  <br>
+<% end %>
+
+
