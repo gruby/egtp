@@ -1,6 +1,6 @@
 langs = {"af":"Afrikaans","sq":"Albanian","am":"Amharic","ar":"Arabic","hy":"Armenian","az":"Azerbaijani","bg":"Bulgarian","zh":"Chinese","zh-CN":"Chinese (China)","zh-HK":"Chinese (Hong Kong)","zh-Hans":"Chinese (Simplified)","zh-TW":"Chinese (Taiwan)","zh-Hant":"Chinese (Traditional)","hr":"Croatian","cs":"Czech","nl":"Dutch","fil":"Filipino","fi":"Finnish","fr":"French","de":"German","el":"Greek","ht":"Haitian Creole","iw":"Hebrew","hi":"Hindi","hi-Latn":"Hindi (Phonetic)","hu":"Hungarian","ig":"Igbo","id":"Indonesian","it":"Italian","ja":"Japanese","kk":"Kazakh","km":"Khmer","rw":"Kinyarwanda","ko":"Korean","ky":"Kyrgyz","ln":"Lingala","lt":"Lithuanian","mg":"Malagasy","ms":"Malay","ml":"Malayalam","mn":"Mongolian","no":"Norwegian","fa-IR":"Persian (Iran)","pl":"Polish","pt":"Portuguese","ro":"Romanian","ru":"Russian","sm":"Samoan","sr":"Serbian","sn":"Shona","sk":"Slovak","sl":"Slovenian","so":"Somali","st":"Southern Sotho","es":"Spanish","sw":"Swahili","sv":"Swedish","ta":"Tamil","th":"Thai","ti":"Tigrinya","ts":"Tsonga","tn":"Tswana","uk":"Ukrainian","vi":"Vietnamese","xh":"Xhosa","yo":"Yoruba","zu":"Zulu","ot":"Other"}
 
-Language.create(:name => "English")
+Language.create(:name => "English", :id => 1)
 
 langs.values.each do |l|
   Language.create(:name => l)
