@@ -51,7 +51,7 @@
       <div class="card">
         <%= link_to i.id, item_path(i) %>
 
-      <% if current_user.language_id == 1 %>
+      <% if current_user.language_id == Language.find_by(name: "English").id %>
         <%= form_for i do |e| %>
           <%= e.hidden_field :user_id, :value => current_user.id %>
           <%= e.hidden_field :status, :value => 2 %>

@@ -9,6 +9,8 @@ class Item < ApplicationRecord
   validates_uniqueness_of :language_id, :scope => :item_id, :message => "Translation in this language already exists", if: :translation?
   normalizes :content, with: -> content { content.strip.gsub(/\n{3,}/, "\n\n") }
 
+  ENGLISH_LANGUAGE_ID = Language.find_by(name: "English").id 
+
   def translation?
     language.name != "English"
   end
@@ -33,12 +35,12 @@ class Item < ApplicationRecord
   end
 
   def self.revised_originals
-    where(["language_id = ? and status = ?", 1, 5])
+    where(["language_id = ? and status = ?", ENGLISH_LANGUAGE_ID, 5])
   end
 
   def self.ready_for_tt_in(lang)
-    if lang == 1
-      where(["language_id = ? and status = ?", 1, 1])
+    if lang == ENGLISH_LANGUAGE_ID
+      where(["language_id = ? and status = ?", ENGLISH_LANGUAGE_ID, 1])
     else
       #revised_originals.where.not( id: where(["language_id = ? and status != ?", "#{lang}", "READY FOR TT"]).pluck(:item_id) )
       revised_originals.where.not( id: where(["language_id = ? and status != ?", "#{lang}", 1]).pluck(:item_id) )
@@ -58,7 +60,7 @@ class Item < ApplicationRecord
   def name_task
     task = status[-2..-1]
     if task == "TT"
-      if language_id == 1
+      if language_id == ENGLISH_LANGUAGE_ID
         "transcription"
       else
         "translation in #{language.name}"
