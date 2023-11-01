@@ -22,6 +22,10 @@ class ItemsController < ApplicationController
 
   # GET /items/1/edit
   def edit
+    unless current_user.admin? or (current_user.id == @item.user_id)
+      redirect_to root_url, notice: "You did not claim this task"
+      return
+    end
   end
 
   # POST /items or /items.json
