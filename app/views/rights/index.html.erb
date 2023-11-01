@@ -9,7 +9,7 @@
 <hr>
 <div id="rights">
   <% @rights.each do |right| %>
-    <%= link_to "#{right.user.named} - #{right.role} in #{right.language.name}", edit_right_path(right) %>
+    <%= link_to "#{right.language.name} - #{right.role} in #{right.user.named} ", edit_right_path(right) %>
     <br>
   <% end %>
 </div>
